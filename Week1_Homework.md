@@ -217,7 +217,9 @@ What is version of the package wheel ?
 
 mriyu@LAPTOP-GMML798J MINGW64 ~/Desktop/DE2024
 $ `docker run -it --entrypoint bash python:3.9`
+
 root@1ff68347a96e:/# `pip list`
+
 Package    Version
 ---------- -------
 pip        23.0.1
