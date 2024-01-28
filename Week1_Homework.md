@@ -205,7 +205,7 @@ Run docker with the python:3.9 image in an interactive mode and the entrypoint o
 
 What is version of the package wheel ?
 
-**0.42.0** 
+**0.42.0 [Correct option]** 
 
 1.0.0
 
@@ -224,7 +224,7 @@ pip        23.0.1
 
 setuptools 58.1.0
 
-**wheel      0.42.0 [Correct Option]**
+**wheel      0.42.0**
 
 =================================================================================================
 
