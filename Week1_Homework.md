@@ -27,9 +27,9 @@ Which tag has the following text? - Automatically remove the container when it e
 **Solution:**
 
 mriyu@LAPTOP-GMML798J MINGW64 ~/Desktop/DE2024
-$ docker run --help
+$ `docker run --help`
 
-Usage:  docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
+`Usage:  docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
 
 Create and run a new container from an image
 
@@ -195,7 +195,7 @@ Options:
       --volumes-from list              Mount volumes from the specified
                                        container(s)
   -w, --workdir string                 Working directory inside the container
-  
+  `
 
 ===============================================================================================
 
@@ -216,8 +216,8 @@ What is version of the package wheel ?
 **Solution:**
 
 mriyu@LAPTOP-GMML798J MINGW64 ~/Desktop/DE2024
-$ docker run -it --entrypoint bash python:3.9
-root@1ff68347a96e:/# pip list
+$ `docker run -it --entrypoint bash python:3.9`
+root@1ff68347a96e:/# `pip list`
 Package    Version
 ---------- -------
 pip        23.0.1
@@ -341,97 +341,6 @@ After updating the main.tf and variable.tf files run:
 Paste the output of this command into the homework submission form.
 
 **Solution:**
-
-variables.tf 
-----------------------------------------------------
-variable "credentials" {
-  description = "My Credentials"
-  default     = "/home/cloudymriyuiitb/.gc/my-creds.json"
-
-}
-
-
-variable "project" {
-  description = "Project"
-  default     = "terraform-demo-412315"
-}
-
-variable "region" {
-  description = "Region"
-  default     = "us-central1"
-}
-
-
-variable "location" {
-  description = "Project Location"
-  default     = "US"
-}
-
-
-variable "bq_dataset_name" {
-  description = "My Bigquery Dataset Name"
-  default     = "demo_dataset"
-}
-
-variable "gcs_bucket_name" {
-  description = "My Storage Bucket Name"
-  default     = "terraform-demo-412315-terra-bucket"
-}
-
-variable "gcs_storage_class" {
-  description = "Bucket Storage Class"
-  default     = "STANDARD"
-}
-
-main.tf
-----------------------
-terraform {
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "5.13.0"
-    }
-  }
-}
-
-provider "google" {
-  credentials = file(var.credentials)
-  project     = var.project
-  region      = var.region
-}
-
-resource "google_storage_bucket" "terrademo-bucket" {
-  name          = var.gcs_bucket_name
-  location      = var.location
-  force_destroy = true
-
-  lifecycle_rule {
-    condition {
-      age = 1
-    }
-    action {
-      type = "Delete"
-    }
-  }
-
-  lifecycle_rule {
-    condition {
-      age = 1
-    }
-    action {
-      type = "AbortIncompleteMultipartUpload"
-    }
-  }
-}
-
-resource "google_bigquery_dataset" "demo-dataset" {
-  dataset_id = var.bq_dataset_name
-  location   = var.location
-}
-
-------------------------------
-`terraform apply`
-
 (base) cloudymriyuiitb@de2024zoomcamp:~/data-engineering-zoomcamp/01-docker-terraform/1_terraform_gcp/terraform/terraform_with_variables$ `terraform apply`
 
 Terraform used the selected providers to generate the following execution plan.      
@@ -440,7 +349,8 @@ Resource actions are indicated with the following symbols:
 
 Terraform will perform the following actions:
 
-  # google_bigquery_dataset.demo-dataset will be created
+  **google_bigquery_dataset.demo-dataset will be created**
+  
   + resource "google_bigquery_dataset" "demo-dataset" {
       + creation_time              = (known after apply)
       + dataset_id                 = "demo_dataset"
@@ -459,7 +369,8 @@ Terraform will perform the following actions:
       + terraform_labels           = (known after apply)
     }
 
-  # google_storage_bucket.terrademo-bucket will be created
+   **google_storage_bucket.terrademo-bucket will be created**
+  
   + resource "google_storage_bucket" "terrademo-bucket" {
       + effective_labels            = (known after apply)
       + force_destroy               = true
@@ -510,9 +421,101 @@ Do you want to perform these actions?
   Enter a value: yes
 
 google_bigquery_dataset.demo-dataset: Creating...
+
 google_storage_bucket.terrademo-bucket: Creating...
+
 google_bigquery_dataset.demo-dataset: Creation complete after 1s [id=projects/terraform-demo-412315/datasets/demo_dataset]
+
 google_storage_bucket.terrademo-bucket: Creation complete after 1s [id=terraform-demo-412315-terra-bucket]
 
-Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+**Apply complete! Resources: 2 added, 0 changed, 0 destroyed.**
+
+variables.tf 
+----------------------------------------------------
+`variable "credentials" {
+  description = "My Credentials"
+  default     = "/home/cloudymriyuiitb/.gc/my-creds.json"
+
+}
+
+
+variable "project" {
+  description = "Project"
+  default     = "terraform-demo-412315"
+}
+
+variable "region" {
+  description = "Region"
+  default     = "us-central1"
+}
+
+
+variable "location" {
+  description = "Project Location"
+  default     = "US"
+}
+
+
+variable "bq_dataset_name" {
+  description = "My Bigquery Dataset Name"
+  default     = "demo_dataset"
+}
+
+variable "gcs_bucket_name" {
+  description = "My Storage Bucket Name"
+  default     = "terraform-demo-412315-terra-bucket"
+}
+
+variable "gcs_storage_class" {
+  description = "Bucket Storage Class"
+  default     = "STANDARD"
+}`
+
+main.tf
+----------------------
+`terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "5.13.0"
+    }
+  }
+}
+
+provider "google" {
+  credentials = file(var.credentials)
+  project     = var.project
+  region      = var.region
+}
+
+resource "google_storage_bucket" "terrademo-bucket" {
+  name          = var.gcs_bucket_name
+  location      = var.location
+  force_destroy = true
+
+  lifecycle_rule {
+    condition {
+      age = 1
+    }
+    action {
+      type = "Delete"
+    }
+  }
+
+  lifecycle_rule {
+    condition {
+      age = 1
+    }
+    action {
+      type = "AbortIncompleteMultipartUpload"
+    }
+  }
+}
+
+resource "google_bigquery_dataset" "demo-dataset" {
+  dataset_id = var.bq_dataset_name
+  location   = var.location
+}`
+
+------------------------------
 =================================
