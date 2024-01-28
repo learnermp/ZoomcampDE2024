@@ -432,7 +432,7 @@ google_storage_bucket.terrademo-bucket: Creation complete after 1s [id=terraform
 
 variables.tf 
 ----------------------------------------------------
-`variable "credentials" {
+variable "credentials" {
   description = "My Credentials"
   default     = "/home/cloudymriyuiitb/.gc/my-creds.json"
 
@@ -469,11 +469,11 @@ variable "gcs_bucket_name" {
 variable "gcs_storage_class" {
   description = "Bucket Storage Class"
   default     = "STANDARD"
-}`
+}
 
 main.tf
 ----------------------
-`terraform {
+terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
@@ -515,7 +515,7 @@ resource "google_storage_bucket" "terrademo-bucket" {
 resource "google_bigquery_dataset" "demo-dataset" {
   dataset_id = var.bq_dataset_name
   location   = var.location
-}`
+}
 
 ------------------------------
 =================================
