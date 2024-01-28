@@ -248,10 +248,8 @@ Remember that lpep_pickup_datetime and lpep_dropoff_datetime columns are in the 
 
 **Solution:**
 
-SELECT COUNT(*) FROM green_taxi_data
-WHERE TO_CHAR(lpep_pickup_datetime, 'YYYY-MM-DD') = '2019-09-18' AND TO_CHAR(lpep_dropoff_datetime, 'YYYY-MM-DD') = '2019-09-18';
-
-![image](https://github.com/learnermp/ZoomcampDE2024/assets/64764963/8950af29-2ad8-48a6-9337-95a52cec4c8f)
+`SELECT COUNT(*) FROM green_taxi_data
+WHERE TO_CHAR(lpep_pickup_datetime, 'YYYY-MM-DD') = '2019-09-18' AND TO_CHAR(lpep_dropoff_datetime, 'YYYY-MM-DD') = '2019-09-18';`
 
 ===============================================================================================
 
@@ -269,10 +267,8 @@ Which was the pick up day with the largest trip distance Use the pick up time fo
 
 **Solution:**
 
-SELECT "lpep_pickup_datetime" FROM green_taxi_data
-WHERE "trip_distance" = (SELECT MAX("trip_distance") FROM green_taxi_data)
-
-![image](https://github.com/learnermp/ZoomcampDE2024/assets/64764963/1f8af011-9c1d-40d5-a8bb-2da42f10de69)
+`SELECT "lpep_pickup_datetime" FROM green_taxi_data
+WHERE "trip_distance" = (SELECT MAX("trip_distance") FROM green_taxi_data);`
 
 ===================================================================================================
 
@@ -282,7 +278,7 @@ Consider lpep_pickup_datetime in '2019-09-18' and ignoring Borough has Unknown
 
 Which were the 3 pick up Boroughs that had a sum of total_amount superior to 50000?
 
-"Brooklyn" "Manhattan" "Queens"
+**"Brooklyn" "Manhattan" "Queens" [Correct Option]**
 
 "Bronx" "Brooklyn" "Manhattan"
 
@@ -291,3 +287,232 @@ Which were the 3 pick up Boroughs that had a sum of total_amount superior to 500
 "Brooklyn" "Queens" "Staten Island"
 
 
+**Solution:**
+
+`SELECT "Borough", SUM("total_amount") AS sums
+FROM green_taxi_data
+INNER JOIN taxi_zone ON green_taxi_data."PULocationID" = taxi_zone."LocationID"
+WHERE DATE("lpep_pickup_datetime") = '2019-09-18'
+GROUP BY "Borough"
+HAVING SUM("total_amount") > 50000
+ORDER BY sums DESC;`
+
+===================================================================================================
+
+**Question 6. Largest tip**
+
+For the passengers picked up in September 2019 in the zone name Astoria which was the drop off zone that had the largest tip? We want the name of the zone, not the id.
+
+Note: it's not a typo, it's tip , not trip
+
+Central Park
+
+Jamaica
+
+**JFK Airport [Correct option]** 
+
+Long Island City/Queens Plaza
+
+**Solution:**
+
+`SELECT "Zone" FROM green_taxi_data
+INNER JOIN taxi_zone ON green_taxi_data."DOLocationID" = taxi_zone."LocationID"
+WHERE "tip_amount" =
+(SELECT MAX(tip_amount) As max_tip FROM green_taxi_data
+INNER JOIN taxi_zone ON green_taxi_data."PULocationID" = taxi_zone."LocationID"
+WHERE TO_CHAR("lpep_pickup_datetime", 'YYYY-MM') = '2019-09' AND "Zone" = 'Astoria');`
+
+=====================================================================================================
+
+Terraform
+
+In this section homework we'll prepare the environment by creating resources in GCP with Terraform.
+
+In your VM on GCP/Laptop/GitHub Codespace install Terraform. Copy the files from the course repo here to your VM/Laptop/GitHub Codespace.
+
+Modify the files as necessary to create a GCP Bucket and Big Query Dataset.
+
+**Question 7. Creating Resources**
+
+After updating the main.tf and variable.tf files run:
+
+`terraform apply`
+
+Paste the output of this command into the homework submission form.
+
+**Solution:**
+
+variables.tf 
+----------------------------------------------------
+variable "credentials" {
+  description = "My Credentials"
+  default     = "/home/cloudymriyuiitb/.gc/my-creds.json"
+
+}
+
+
+variable "project" {
+  description = "Project"
+  default     = "terraform-demo-412315"
+}
+
+variable "region" {
+  description = "Region"
+  default     = "us-central1"
+}
+
+
+variable "location" {
+  description = "Project Location"
+  default     = "US"
+}
+
+
+variable "bq_dataset_name" {
+  description = "My Bigquery Dataset Name"
+  default     = "demo_dataset"
+}
+
+variable "gcs_bucket_name" {
+  description = "My Storage Bucket Name"
+  default     = "terraform-demo-412315-terra-bucket"
+}
+
+variable "gcs_storage_class" {
+  description = "Bucket Storage Class"
+  default     = "STANDARD"
+}
+
+main.tf
+----------------------
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "5.13.0"
+    }
+  }
+}
+
+provider "google" {
+  credentials = file(var.credentials)
+  project     = var.project
+  region      = var.region
+}
+
+resource "google_storage_bucket" "terrademo-bucket" {
+  name          = var.gcs_bucket_name
+  location      = var.location
+  force_destroy = true
+
+  lifecycle_rule {
+    condition {
+      age = 1
+    }
+    action {
+      type = "Delete"
+    }
+  }
+
+  lifecycle_rule {
+    condition {
+      age = 1
+    }
+    action {
+      type = "AbortIncompleteMultipartUpload"
+    }
+  }
+}
+
+resource "google_bigquery_dataset" "demo-dataset" {
+  dataset_id = var.bq_dataset_name
+  location   = var.location
+}
+
+------------------------------
+`terraform apply`
+
+(base) cloudymriyuiitb@de2024zoomcamp:~/data-engineering-zoomcamp/01-docker-terraform/1_terraform_gcp/terraform/terraform_with_variables$ `terraform apply`
+
+Terraform used the selected providers to generate the following execution plan.      
+Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # google_bigquery_dataset.demo-dataset will be created
+  + resource "google_bigquery_dataset" "demo-dataset" {
+      + creation_time              = (known after apply)
+      + dataset_id                 = "demo_dataset"
+      + default_collation          = (known after apply)
+      + delete_contents_on_destroy = false
+      + effective_labels           = (known after apply)
+      + etag                       = (known after apply)
+      + id                         = (known after apply)
+      + is_case_insensitive        = (known after apply)
+      + last_modified_time         = (known after apply)
+      + location                   = "US"
+      + max_time_travel_hours      = (known after apply)
+      + project                    = "terraform-demo-412315"
+      + self_link                  = (known after apply)
+      + storage_billing_model      = (known after apply)
+      + terraform_labels           = (known after apply)
+    }
+
+  # google_storage_bucket.terrademo-bucket will be created
+  + resource "google_storage_bucket" "terrademo-bucket" {
+      + effective_labels            = (known after apply)
+      + force_destroy               = true
+      + id                          = (known after apply)
+      + location                    = "US"
+      + name                        = "terraform-demo-412315-terra-bucket"
+      + project                     = (known after apply)
+      + public_access_prevention    = (known after apply)
+      + rpo                         = (known after apply)
+      + self_link                   = (known after apply)
+      + storage_class               = "STANDARD"
+      + terraform_labels            = (known after apply)
+      + uniform_bucket_level_access = (known after apply)
+      + url                         = (known after apply)
+
+      + lifecycle_rule {
+          + action {
+              + type = "Delete"
+            }
+          + condition {
+              + age                   = 1
+              + matches_prefix        = []
+              + matches_storage_class = []
+              + matches_suffix        = []
+              + with_state            = (known after apply)
+            }
+        }
+      + lifecycle_rule {
+          + action {
+              + type = "AbortIncompleteMultipartUpload"
+            }
+          + condition {
+              + age                   = 1
+              + matches_prefix        = []
+              + matches_storage_class = []
+              + matches_suffix        = []
+              + with_state            = (known after apply)
+            }
+        }
+    }
+
+Plan: 2 to add, 0 to change, 0 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+google_bigquery_dataset.demo-dataset: Creating...
+google_storage_bucket.terrademo-bucket: Creating...
+google_bigquery_dataset.demo-dataset: Creation complete after 1s [id=projects/terraform-demo-412315/datasets/demo_dataset]
+google_storage_bucket.terrademo-bucket: Creation complete after 1s [id=terraform-demo-412315-terra-bucket]
+
+Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+=================================
