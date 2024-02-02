@@ -14,18 +14,18 @@ You can use the same datatypes and date parsing methods shown in the course.
 
 BONUS: load the final three months using a for loop and pd.concat
 
-`import pandas as pd`
+import pandas as pd
 
-`if 'data_loader' not in globals():
+if 'data_loader' not in globals():
 
     from mage_ai.data_preparation.decorators import data_loader
     
 if 'test' not in globals():
 
-    from mage_ai.data_preparation.decorators import test`
+    from mage_ai.data_preparation.decorators import test
 
 
-`@data_loader
+@data_loader
 
 def load_data(*args, **kwargs):
     """
@@ -65,7 +65,7 @@ def load_data(*args, **kwargs):
             
     parse_dates_green_taxi = ['lpep_pickup_datetime', 'lpep_dropoff_datetime']`
 
-`#Initialize an empty list to store DataFrames
+#Initialize an empty list to store DataFrames
 
     dfs = []
 
@@ -73,13 +73,13 @@ def load_data(*args, **kwargs):
     
         df = pd.read_csv(url, sep=',', compression='gzip', dtype=taxi_dtypes, parse_dates=parse_dates_green_taxi)
         
-        dfs.append(df)`
+        dfs.append(df)
 
-   ` #Concatenate the DataFrames
+   #Concatenate the DataFrames
     
     print(f'Once the dataset is loaded, the shape of the data is : {pd.concat(dfs, axis = 0).shape}')
    
-    return pd.concat(dfs, axis = 0)`
+    return pd.concat(dfs, axis = 0)
 
 @test
 
@@ -89,7 +89,7 @@ def test_output(output, *args) -> None:
     Template code for testing the output of the block.
     """
     
-    assert output is not None, 'The output is undefined'
+    assert output is not None, 'The output is undefined
 `
 
 =============================================================================================================================================================
@@ -178,7 +178,7 @@ def test_output(output, *args) -> None:
 
     assert (output['passenger_count'] > 0).all(), "Assertion Error: passenger_count is not greater than 0."
 
-    assert (output['trip_distance'] > 0).all(), "Assertion Error: trip_distance is not greater than 0."`
+    assert (output['trip_distance'] > 0).all(), "Assertion Error: trip_distance is not greater than 0."
 
 
   ==================================================================================================================================
