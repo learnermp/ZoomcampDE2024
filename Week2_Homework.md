@@ -218,21 +218,33 @@ def export_data_to_postgres(df: DataFrame, **kwargs) -> None:
 **Write your data as Parquet files to a bucket in GCP, partioned by lpep_pickup_date. Use the pyarrow library!**
 
 `from mage_ai.settings.repo import get_repo_path
+
 from mage_ai.io.config import ConfigFileLoader
+
 from mage_ai.io.google_cloud_storage import GoogleCloudStorage
+
 from pandas import DataFrame
+
 import os
+
 import pyarrow as pa
+
 import pyarrow.parquet as pq 
 
 if 'data_exporter' not in globals():
+
     from mage_ai.data_preparation.decorators import data_exporter
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/home/src/terraform-demo-412315-6ac61949496c.json"
+
 bucket_name = 'mage-zoomcamp-mpathak'
+
 project_id = 'terraform-demo-412315'
+
 object_key = 'green_taxi.parquet'
+
 table_name = 'green_taxi'
+
 root_path = f'{bucket_name}/{table_name}'
 
 
