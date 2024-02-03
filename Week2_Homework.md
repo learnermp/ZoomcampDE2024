@@ -111,6 +111,8 @@ passenger_count is greater than 0
 
 trip_distance is greater than 0
 
+```python
+
 import re
 
 if 'transformer' not in globals():
@@ -181,10 +183,12 @@ def test_output(output, *args) -> None:
 
     assert (output['trip_distance'] > 0).all(), "Assertion Error: trip_distance is not greater than 0."
 
-
+```
   ==================================================================================================================================
 
  **Using a Postgres data exporter (SQL or Python), write the dataset to a table called green_taxi in a schema mage. Replace the table if it already exists.**
+
+ ```python
 
 from mage_ai.settings.repo import get_repo_path
 from mage_ai.io.config import ConfigFileLoader
@@ -214,9 +218,11 @@ def export_data_to_postgres(df: DataFrame, **kwargs) -> None:
 
 ![image](https://github.com/learnermp/ZoomcampDE2024/assets/64764963/83b06ec7-e5b4-483f-8cd5-8bc1fc64af3b)
 
-
+```
 ==================================================================================================================================
 **Write your data as Parquet files to a bucket in GCP, partioned by lpep_pickup_date. Use the pyarrow library!**
+
+```python
 
 from mage_ai.settings.repo import get_repo_path
 
@@ -260,7 +266,7 @@ def export_data(data, *args, **kwargs) -> None:
         filesystem = gcs
     )
 
-
+```
 ![image](https://github.com/learnermp/ZoomcampDE2024/assets/64764963/6ef2ad53-fa74-415b-b5cc-8c9c739a16cf)
 
 ![image](https://github.com/learnermp/ZoomcampDE2024/assets/64764963/62094ac6-7fd3-4fbb-8705-7361a7187666)
