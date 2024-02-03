@@ -220,6 +220,7 @@ def export_data_to_postgres(df: DataFrame, **kwargs) -> None:
 
 ```
 ==================================================================================================================================
+
 **Write your data as Parquet files to a bucket in GCP, partioned by lpep_pickup_date. Use the pyarrow library!**
 
 ```python
