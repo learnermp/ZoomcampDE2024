@@ -110,7 +110,7 @@ passenger_count is greater than 0
 
 trip_distance is greater than 0
 
-`import re
+import re
 
 if 'transformer' not in globals():
     from mage_ai.data_preparation.decorators import transformer
@@ -185,7 +185,7 @@ def test_output(output, *args) -> None:
 
  **Using a Postgres data exporter (SQL or Python), write the dataset to a table called green_taxi in a schema mage. Replace the table if it already exists.**
 
-`from mage_ai.settings.repo import get_repo_path
+from mage_ai.settings.repo import get_repo_path
 from mage_ai.io.config import ConfigFileLoader
 from mage_ai.io.postgres import Postgres
 from pandas import DataFrame
@@ -209,7 +209,7 @@ def export_data_to_postgres(df: DataFrame, **kwargs) -> None:
             table_name,
             index=False,  # Specifies whether to include index in exported table
             if_exists='replace',  # Specify resolution policy if table name already exists
-        )`
+        )
 
 ![image](https://github.com/learnermp/ZoomcampDE2024/assets/64764963/83b06ec7-e5b4-483f-8cd5-8bc1fc64af3b)
 
@@ -217,7 +217,7 @@ def export_data_to_postgres(df: DataFrame, **kwargs) -> None:
 ==================================================================================================================================
 **Write your data as Parquet files to a bucket in GCP, partioned by lpep_pickup_date. Use the pyarrow library!**
 
-`from mage_ai.settings.repo import get_repo_path
+from mage_ai.settings.repo import get_repo_path
 
 from mage_ai.io.config import ConfigFileLoader
 
@@ -245,7 +245,7 @@ object_key = 'green_taxi.parquet'
 
 table_name = 'green_taxi'
 
-root_path = f'{bucket_name}/{table_name}'
+root_path = f'{bucket_name}/{table_name}
 
 
 @data_exporter
