@@ -257,7 +257,7 @@ def export_data(data, *args, **kwargs) -> None:
         root_path = root_path,
         partition_cols = ['lpep_pickup_date'],
         filesystem = gcs
-    )`
+    )
 
 
 ![image](https://github.com/learnermp/ZoomcampDE2024/assets/64764963/6ef2ad53-fa74-415b-b5cc-8c9c739a16cf)
