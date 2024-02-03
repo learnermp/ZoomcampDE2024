@@ -14,6 +14,7 @@ You can use the same datatypes and date parsing methods shown in the course.
 
 BONUS: load the final three months using a for loop and pd.concat
 
+'''python 
 import pandas as pd
 
 if 'data_loader' not in globals():
@@ -91,7 +92,7 @@ def test_output(output, *args) -> None:
     
     assert output is not None, 'The output is undefined
 `
-
+'''
 =============================================================================================================================================================
 
 **Add a transformer block and perform the following:**
