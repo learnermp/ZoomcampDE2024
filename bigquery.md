@@ -1,4 +1,7 @@
-```python import pandas as pd
+Mage DATA LOADER
+
+```python
+import pandas as pd
 import pyarrow.parquet as pq
 import requests
 from io import BytesIO
@@ -69,3 +72,87 @@ def test_output(output, *args) -> None:
     """
     assert output is not None, 'The output is undefined'
 ```
+================================================================================
+Mage DATA EXPORTER  to gcp
+```python
+from mage_ai.settings.repo import get_repo_path
+from mage_ai.io.config import ConfigFileLoader
+from mage_ai.io.google_cloud_storage import GoogleCloudStorage
+from pandas import DataFrame
+from os import path
+
+if 'data_exporter' not in globals():
+    from mage_ai.data_preparation.decorators import data_exporter
+
+
+@data_exporter
+def export_data_to_google_cloud_storage(df: DataFrame, **kwargs) -> None:
+    """
+    Template for exporting data to a Google Cloud Storage bucket.
+    Specify your configuration settings in 'io_config.yaml'.
+
+    Docs: https://docs.mage.ai/design/data-loading#googlecloudstorage
+    """
+    config_path = path.join(get_repo_path(), 'io_config.yaml')
+    config_profile = 'default'
+
+    bucket_name = 'mage-zoomcamp-mpathak'
+    object_key = 'green_taxi_2022_data1.parquet'
+
+    GoogleCloudStorage.with_config(ConfigFileLoader(config_path, config_profile)).export(
+        df,
+        bucket_name,
+        object_key,
+    )
+```
+
+===================================================================================================================================
+
+Important Note:
+
+For this homework we will be using the 2022 Green Taxi Trip Record Parquet Files from the New York City Taxi Data found here:
+https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page
+If you are using orchestration such as Mage, Airflow or Prefect do not load the data into Big Query using the orchestrator.
+Stop with loading the files into a bucket.
+
+NOTE: You will need to use the PARQUET option files when creating an External Table
+
+SETUP:
+Create an external table using the Green Taxi Trip Records Data for 2022.
+Create a table in BQ using the Green Taxi Trip Records for 2022 (do not partition or cluster this table).
+
+```SQL
+
+-- Creating external table referring to gcs path
+CREATE OR REPLACE EXTERNAL TABLE `terraform-demo-412315.ny_taxi.external_green_taxi_2022_data1`
+OPTIONS (
+  format = 'PARQUET',
+  uris = ['gs://mage-zoomcamp-mpathak/green_taxi_2022_data1.parquet']
+);
+
+```
+
+```SQL
+
+-- Create a non partitioned table from external table
+CREATE OR REPLACE TABLE terraform-demo-412315.ny_taxi.external_green_taxi_2022_data1_non_partitioned AS
+SELECT * FROM terraform-demo-412315.ny_taxi.external_green_taxi_2022_data1;
+
+```
+===============================================================================================
+
+
+Question 1: What is count of records for the 2022 Green Taxi Data??
+
+65,623,481
+**840,402**
+1,936,423
+253,647
+
+```SQL
+
+SELECT COUNT(*) FROM terraform-demo-412315.ny_taxi.external_green_taxi_2022_data1;
+
+```
+
+
