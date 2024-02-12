@@ -1,5 +1,4 @@
-```python
-import pandas as pd
+```python import pandas as pd
 import pyarrow.parquet as pq
 import requests
 from io import BytesIO
