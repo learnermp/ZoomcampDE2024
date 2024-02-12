@@ -142,11 +142,16 @@ SELECT * FROM terraform-demo-412315.ny_taxi.external_green_taxi_2022_data1;
 ===============================================================================================
 
 
-Question 1: What is count of records for the 2022 Green Taxi Data??
+**Question 1:**
+
+What is count of records for the 2022 Green Taxi Data??
 
 65,623,481
-**840,402**
+
+**840,402  Correct_Option**
+
 1,936,423
+
 253,647
 
 ```SQL
@@ -154,5 +159,146 @@ Question 1: What is count of records for the 2022 Green Taxi Data??
 SELECT COUNT(*) FROM terraform-demo-412315.ny_taxi.external_green_taxi_2022_data1;
 
 ```
+=================================
+
+**Question 2:**
+
+Write a query to count the distinct number of PULocationIDs for the entire dataset on both the tables.
+
+What is the estimated amount of data that will be read when this query is executed on the External Table and the Table?
+
+**0 MB for the External Table and 6.41MB for the Materialized Table  correct_option**
+
+18.82 MB for the External Table and 47.60 MB for the Materialized Table
+
+0 MB for the External Table and 0MB for the Materialized Table
+
+2.14 MB for the External Table and 0MB for the Materialized Table
+
+```SQL
+SELECT DISTINCT PULocationID FROM terraform-demo-412315.ny_taxi.external_green_taxi_2022_data1;  # 0 KB
+
+SELECT DISTINCT PULocationID FROM terraform-demo-412315.ny_taxi.external_green_taxi_2022_data1_non_partitioned; # 6.41 MB
+
+```
+==============================
+
+**Question 3:**
+
+How many records have a fare_amount of 0?
+
+12,488
+
+128,219
+
+112
+
+**1,622 correct_option**
+
+```SQL
+SELECT COUNT(*) FROM terraform-demo-412315.ny_taxi.external_green_taxi_2022_data1 WHERE fare_amount = 0;
+```
+===========================
+
+**Question 4:**
+
+What is the best strategy to make an optimized table in Big Query if your query will always order the results by PUlocationID and filter based on lpep_pickup_datetime? 
+
+(Create a new table with this strategy)
+
+Cluster on lpep_pickup_datetime Partition by PUlocationID
+
+**Partition by lpep_pickup_datetime Cluster on PUlocationID corect_option**
+
+Partition by lpep_pickup_datetime and Partition by PUlocationID
+
+Cluster on by lpep_pickup_datetime and Cluster on PUlocationID
+
+```SQL
+
+CREATE TABLE `terraform-demo-412315.ny_taxi.external_green_taxi_2022_data_non_partitioned_new`
+AS
+SELECT
+  *,
+  TIMESTAMP(PARSE_DATETIME('%Y-%m-%d %H:%M:%S', lpep_pickup_datetime)) AS new_lpep_pickup_datetime,
+  TIMESTAMP(PARSE_DATETIME('%Y-%m-%d %H:%M:%S', lpep_dropoff_datetime)) AS new_lpep_dropoff_datetime,
+FROM
+  `terraform-demo-412315.ny_taxi.external_green_taxi_2022_data1_non_partitioned`;
+
+CREATE OR REPLACE TABLE terraform-demo-412315.ny_taxi.external_green_taxi_2022_data_partitioned_and_clustered
+PARTITION BY DATE(new_lpep_pickup_datetime) 
+CLUSTER BY PUlocationID AS
+SELECT * FROM terraform-demo-412315.ny_taxi.external_green_taxi_2022_data_non_partitioned_new;
+
+```
+========================================
+
+**Question 5:**
+
+Write a query to retrieve the distinct PULocationID between lpep_pickup_datetime 06/01/2022 and 06/30/2022 (inclusive)
+
+Use the materialized table you created earlier in your from clause and note the estimated bytes. Now change the table in the from clause to the partitioned table you 
+
+created for question 4 and note the estimated bytes processed. What are these values?
+
+Choose the answer which most closely matches.
+
+22.82 MB for non-partitioned table and 647.87 MB for the partitioned table
+
+**12.82 MB for non-partitioned table and 1.12 MB for the partitioned table  correct_option**
+
+5.63 MB for non-partitioned table and 0 MB for the partitioned table
+
+10.31 MB for non-partitioned table and 10.31 MB for the partitioned table
 
 
+```SQL
+SELECT DISTINCT PULocationID FROM terraform-demo-412315.ny_taxi.external_green_taxi_2022_data_non_partitioned_new
+WHERE new_lpep_pickup_datetime BETWEEN '2022-06-01' AND '2022-06-30';
+
+# 12.82 MB
+
+
+SELECT DISTINCT PULocationID FROM terraform-demo-412315.ny_taxi.external_green_taxi_2022_data_partitioned_and_clustered
+WHERE new_lpep_pickup_datetime BETWEEN '2022-06-01' AND '2022-06-30';
+
+# 1.12 MB
+
+```
+===========================
+
+**Question 6:**
+
+Where is the data stored in the External Table you created?
+
+Big Query
+
+**GCP Bucket**
+
+Big Table
+
+Container Registry
+
+============================================
+
+**Question 7:**
+
+It is best practice in Big Query to always cluster your data:
+
+True
+
+**False correct_option**
+
+===========================================
+
+**(Bonus: Not worth points) Question 8:**
+
+No Points: Write a SELECT count(*) query FROM the materialized table you created. How many bytes does it estimate will be read? Why?
+
+```SQL
+
+SELECT count(*) FROM terraform-demo-412315.ny_taxi.external_green_taxi_2022_data1_non_partitoned
+
+```
+
+It processes 0 bytes as data is in gcp bucket (google cloud) . We see 0 bytes processed as query engine didn't need to read any data from BigQuery's native storage.
