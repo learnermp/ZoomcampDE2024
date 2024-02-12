@@ -73,7 +73,9 @@ def test_output(output, *args) -> None:
     assert output is not None, 'The output is undefined'
 ```
 ================================================================================
+
 Mage DATA EXPORTER  to gcp
+
 ```python
 from mage_ai.settings.repo import get_repo_path
 from mage_ai.io.config import ConfigFileLoader
@@ -104,6 +106,7 @@ def export_data_to_google_cloud_storage(df: DataFrame, **kwargs) -> None:
         bucket_name,
         object_key,
     )
+
 ```
 
 ===================================================================================================================================
@@ -297,7 +300,7 @@ No Points: Write a SELECT count(*) query FROM the materialized table you created
 
 ```SQL
 
-SELECT count(*) FROM terraform-demo-412315.ny_taxi.external_green_taxi_2022_data1_non_partitoned
+SELECT count(*) FROM terraform-demo-412315.ny_taxi.external_green_taxi_2022_data1_non_partitioned
 
 ```
 
